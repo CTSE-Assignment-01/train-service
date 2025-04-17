@@ -16,7 +16,7 @@ spec:
     spec: 
      containers:
       - name: trainservice
-        image: it21048500/ctse_train_service
+        image: ezzyj/ctse_train_service
         ports:
         - containerPort: 4001
         env:   
