@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag it21048500/train-service
+      run: docker build . --file Dockerfile --tag ezzyj/train-service
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v1
@@ -22,4 +22,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Push Image to Docker Hub
-      run: docker push it21048500/train-service
+      run: docker push ezzyj/train-service
