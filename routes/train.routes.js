@@ -1,6 +1,7 @@
+// routes\train.routes.js
 const express = require("express");
 const trainController = require("../controllers/train.controller");
-const { protect } = require("../middlewares/auth.middlware");
+const { protect } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 

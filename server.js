@@ -3,8 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const trainRoutes = require("./routes/train.routes");
+const userRoutes = require("./routes/user.routes");
 
-const mongoDB = "mongodb+srv://root:root@cluster0.spmcifx.mongodb.net/ctse";
+const mongoDB = "mongodb+srv://esithakavisara:aaa@cluster0.lswajj6.mongodb.net/";
 
 // Connect to MongoDB
 mongoose
@@ -22,6 +23,12 @@ app.use(cors());
 
 // User routes
 app.use("/trains", trainRoutes);
+app.use("/users", userRoutes);
+
+app.get("/test", (req, res) => {
+  res.send("Server is working!");
+});
+
 
 const PORT = process.env.PORT || 4001;
 
