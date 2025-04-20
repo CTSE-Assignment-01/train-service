@@ -6,7 +6,8 @@
   "scripts": {
     "testdgd": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
