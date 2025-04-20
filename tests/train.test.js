@@ -1,9 +1,9 @@
-const request = require('supertest');
-const app = require('../server');
-const mongoose = require('mongoose');
-require('dotenv').config();
+// tests/train.test.js
+const request = require("supertest");
+const mongoose = require("mongoose");
+const app = require("../app");
 
-describe('Train API', () => {
+describe("Train API", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.MONGO_URI);
   });
@@ -12,9 +12,9 @@ describe('Train API', () => {
     await mongoose.connection.close();
   });
 
-  test('GET /trains - should return list of trains', async () => {
-    const response = await request(app).get('/trains');
-    expect(response.statusCode).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
+  test("GET /trains - should return list of trains", async () => {
+    const res = await request(app).get("/trains");
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
   });
 });
