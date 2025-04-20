@@ -1,26 +1,26 @@
-const request = require("supertest");
-const mongoose = require("mongoose");
-const app = require("../app");
-const Train = require("../models/train.model");
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const app = require('../app');
+const request = require('supertest');
+const User = require('../models/user.model'); // Import the User model if required
 
 describe("Train API", () => {
   let token;
+  let testUser;
 
   beforeAll(async () => {
-    // Create a mock user and generate a JWT
-    const mockUserId = new mongoose.Types.ObjectId();
-    token = jwt.sign({ id: mockUserId }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    // Create a mock user for JWT authentication
+    testUser = new User({ email: 'test@example.com', password: 'password' });
+    await testUser.save();
 
-    // Connect to test DB if not already connected
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(process.env.MONGO_URI);
-    }
-
-    await Train.deleteMany({}); // Clear existing trains
+    // Generate a JWT token for the mock user
+    token = jwt.sign({ id: testUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '24h'
+    });
   });
 
   afterAll(async () => {
+    await User.deleteMany({});
     await mongoose.connection.close();
   });
 
@@ -32,7 +32,7 @@ describe("Train API", () => {
         arrivalTime: "12:00",
         fromLocation: "City A",
         toLocation: "City B",
-        date: "2025-04-25T00:00:00.000Z",
+        date: "2025-04-25T00:00:00Z",
         class: "First",
         availableSeats: 30,
         totalSeats: 50,
@@ -40,10 +40,10 @@ describe("Train API", () => {
 
       const res = await request(app)
         .post("/trains")
-        .set("Authorization", `Bearer ${token}`) // Attach the JWT token to the request
+        .set("Authorization", `Bearer ${token}`) // Include JWT token
         .send(newTrain);
 
-      console.log("POST /trains response:", res.body); // For debugging
+      console.log("POST /trains response:", res.body); // Debugging
 
       expect(res.statusCode).toBe(201);
       expect(res.body).toHaveProperty("_id");
@@ -53,28 +53,12 @@ describe("Train API", () => {
 
   describe("GET /trains", () => {
     test("should return a list of trains", async () => {
-      // First, ensure that the POST request to create a train has been made
-      await request(app)
-        .post("/trains")
-        .set("Authorization", `Bearer ${token}`)
-        .send({
-          name: "Express 101",
-          departureTime: "08:00",
-          arrivalTime: "12:00",
-          fromLocation: "City A",
-          toLocation: "City B",
-          date: "2025-04-25T00:00:00.000Z",
-          class: "First",
-          availableSeats: 30,
-          totalSeats: 50,
-        });
-
-      // Then fetch the list of trains
       const res = await request(app)
         .get("/trains")
-        .set("Authorization", `Bearer ${token}`); // Attach the JWT token
+        .set("Authorization", `Bearer ${token}`) // Include JWT token
+        .send();
 
-      console.log("GET /trains response:", res.body); // For debugging
+      console.log("GET /trains response:", res.body); // Debugging
 
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
