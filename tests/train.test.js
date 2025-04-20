@@ -5,6 +5,11 @@ const jwt = require("jsonwebtoken");
 const app = require("../app");
 const Train = require("../models/train.model");
 const User = require("../models/user.model");
+const crypto = require("crypto");
+
+const generateRandomPassword = () => {
+  return crypto.randomBytes(8).toString('hex');  // Generates a random 16-character password
+};
 
 describe("Train API", () => {
   let token;
@@ -23,7 +28,7 @@ describe("Train API", () => {
       phoneNumber: "1234567890",
       nic: "123456789V",
       email: "testuser@example.com",   // Add email
-      password: "TestPassword123",     // Add password
+      password: generateRandomPassword(),  // Random password
     });
 
     await mockUser.save();
