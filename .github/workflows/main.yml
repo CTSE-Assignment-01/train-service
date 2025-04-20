@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Train Service
+name: CI(build & test) Pipeline for Train Service
 
 on:
   push:
